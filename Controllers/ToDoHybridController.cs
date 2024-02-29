@@ -16,58 +16,63 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
     private readonly ILogger<ToDoHybridController> _logger = logger;
     private readonly IConfiguration _config = config;
     private readonly ToDoContext _context = context;
+
+    private string GenerateTodoUrl(int id) => HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + $"/todo/hybrid/{id}";
     
     [HttpGet]
-    public async Task<IEnumerable<ToDo>> Get()
+    public async Task<IActionResult> Get()
     {
         var todos = await _context.ToDo.Take(10).ToListAsync();
         var todoList = todos.Select(t => {
-            t.Url = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + $"/{RouteData.Values["controller"]}/{t.Id}";
+            t.Url = GenerateTodoUrl(t.Id);
             return t;
         }).ToList();
-        return todoList;
+        return new OkObjectResult(todoList);
     }
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<ToDo> Get(int id)
+    public async Task<IActionResult> Get(int id)
     {
         var todo = await _context.ToDo.FindAsync(id);       
-        todo.Url = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + $"/{RouteData.Values["controller"]}/{todo.Id}";
-        return todo;
+        if (todo == null) return NotFound();
+        todo.Url = GenerateTodoUrl(id);
+        return new OkObjectResult(todo);
     }
 
     [HttpPost]        
-    public async Task<ToDo> Post([FromBody]ToDo todo)
+    public async Task<IActionResult> Post([FromBody]ToDo todo)
     {
         await _context.ToDo.AddAsync(todo);
-        await _context.SaveChangesAsync();
-                    
-        return todo;
+        await _context.SaveChangesAsync();        
+        todo.Url = GenerateTodoUrl(todo.Id);
+        return new OkObjectResult(todo);
     }
 
     [HttpPatch]     
     [Route("{id}")]   
-    public async Task<ToDo> Patch(int id, [FromBody]ToDo todo)
+    public async Task<IActionResult> Patch(int id, [FromBody]ToDo newTodo)
     {
         var existing = await _context.ToDo.FindAsync(id);
-        existing.Title = todo.Title;
-        existing.Completed = todo.Completed;
-        existing.Extensions = todo.Extensions;
+        if (existing == null) return NotFound();
+        existing.Title = newTodo.Title ?? existing.Title;
+        existing.Completed = newTodo.Completed;
+        existing.Extensions = newTodo.Extensions ?? existing.Extensions;
         _context.SaveChanges();
-        existing.Url = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + $"/{RouteData.Values["controller"]}/{existing.Id}";
-        return existing;
+        existing.Url = GenerateTodoUrl(existing.Id);        
+        return new OkObjectResult(existing);
     }
     
     [HttpDelete]     
     [Route("{id}")]   
-    public async Task<ToDo> Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {            
-        var todo = await _context.ToDo.FindAsync(id);     
+        var todo = await _context.ToDo.FindAsync(id);   
+        if (todo == null) return NotFound();  
         _context.ToDo.Remove(todo);            
         _context.SaveChanges();
-        todo.Url = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + $"/{RouteData.Values["controller"]}/{todo.Id}";
-        return todo;
+        todo.Url = GenerateTodoUrl(id);
+        return new OkObjectResult(todo);
     }     
 
     [HttpDelete]         

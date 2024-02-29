@@ -41,8 +41,7 @@ namespace Azure.SQLDB.Samples.DynamicSchema
         public string Url { get; set; }            
 
         [JsonIgnore]
-        public ToDoExtension Extensions { get; set; } = null!;
-        
+        public ToDoExtension Extensions { get; set; } = null!;        
     }
 
     public class ToDoExtension {
