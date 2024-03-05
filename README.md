@@ -1,57 +1,26 @@
-# Project Name
+---
+page_type: sample
+languages:
+- tsql
+- sql
+- csharp
+products:
+- azure-sql-database
+- dotnet
+- ef-core
+- sql-server
+description: "Dynamic Schema Management With Azure SQL and Entity Framework "
+---
 
-(short, 1-3 sentenced, description of the project)
+# Dynamic Schema Management With Azure SQL and Entity Framework 
 
-## Features
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-This project framework provides the following features:
+A sample project that shows how to deal with dynamic schema in Azure SQL, using the native JSON support and Entity Framework Core. This repo is a variation of the "hybrid" sample discussed and shown in the 
 
-* Feature 1
-* Feature 2
-* ...
+https://github.com/azure-samples/azure-sql-db-dynamic-schema
 
-## Getting Started
+repository, but using Entity Framework Core instead of Dapper. Since EF Core 7, in fact, it is now possible to let the framework handle the serialization and deserialization of an object into a JSON column, making the code much cleaner and easier to maintain:
 
-### Prerequisites
+https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-7.0/whatsnew#json-columns
 
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
-
-### Quickstart
-(Add steps to get up and running quickly)
-
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
-
-
-## Demo
-
-A demo app is included to show how to use the project.
-
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
-
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
