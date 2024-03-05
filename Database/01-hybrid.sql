@@ -15,6 +15,4 @@ alter table [dbo].[todo_hybrid] add constraint df__todo_hybrid__completed defaul
 go
 alter table [dbo].[todo_hybrid] add constraint ck__todo_hybrid__other check (isjson([extension]) = 1)
 go
-alter role db_datareader add member [dynamic-schema-test-user]
-alter role db_datawriter add member [dynamic-schema-test-user]
-go
+
