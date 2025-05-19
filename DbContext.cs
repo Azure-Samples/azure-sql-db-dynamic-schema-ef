@@ -12,8 +12,8 @@ public class ToDoContext(DbContextOptions<ToDoContext> options) : DbContext(opti
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ToDo>(
-            eb => {                                    
-                eb.OwnsOne(todo => todo.Extensions, builder => { builder.ToJson("extension"); });                                    
+            etb => {                                    
+                etb.OwnsOne(todo => todo.Extensions, builder => { builder.ToJson("extension"); });                                    
             }
         );
     }

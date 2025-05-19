@@ -36,6 +36,13 @@ namespace Azure.SQLDB.Samples.DynamicSchema
             set => Extensions.Order = value;
         }
 
+        // [JsonPropertyName("author")]
+        // [NotMapped]
+        // public string Author { 
+        //     get => Extensions.Author;
+        //     set => Extensions.Author = value;
+        // }
+
         [JsonPropertyName("url")]
         [NotMapped]
         public string Url { get; set; }            
@@ -46,6 +53,9 @@ namespace Azure.SQLDB.Samples.DynamicSchema
 
     public class ToDoExtension {
         [JsonPropertyName("order")]
-        public int Order { get; set; }        
+        public int Order { get; set; }   
+
+        // [JsonPropertyName("author")]
+        // public string Author { get; set;}     
     }
 }
