@@ -9,6 +9,70 @@
 		[v-cloak] {
 			display: none;
 		}
+		
+		.todo-tags {
+			margin: 5px 0 10px 58px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4px;
+		}
+		
+		.tag {
+			display: inline-flex;
+			align-items: center;
+			background: #f0f0f0;
+			border: 1px solid #ddd;
+			border-radius: 12px;
+			padding: 2px 8px;
+			font-size: 11px;
+			color: #555;
+		}
+		
+		.tag-remove {
+			background: none;
+			border: none;
+			color: #999;
+			cursor: pointer;
+			margin-right: 4px;
+			padding: 0;
+			font-size: 12px;
+			width: 12px;
+			height: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		.tag-remove:hover {
+			color: #cc0000;
+		}
+		
+		.add-tag-btn {
+			background: none;
+			border: 1px dashed #ddd;
+			border-radius: 12px;
+			padding: 2px 8px;
+			font-size: 11px;
+			color: #999;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 2px;
+		}
+		
+		.add-tag-btn:hover {
+			border-color: #999;
+			color: #666;
+		}
+		
+		.tag-input {
+			border: 1px solid #ddd;
+			border-radius: 12px;
+			padding: 2px 8px;
+			font-size: 11px;
+			outline: none;
+			min-width: 60px;
+		}
 	</style>
 </head>
 
@@ -32,6 +96,27 @@
 					</div>
 					<input class="edit" type="text" v-model="todo.title" v-todo-focus="todo == editedTodo"
 						@blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" />
+					
+					<!-- Tags section -->
+					<div class="todo-tags" v-if="!todo.editing">
+						<span v-for="tag in todo.tags" :key="tag" class="tag">
+							<button class="tag-remove" @click="removeTag(todo, tag)">×</button>
+							{{ tag }}
+						</span>
+						<input 
+							v-if="todo.showTagInput" 
+							class="tag-input" 
+							v-model="todo.newTag"
+							@keyup.enter="addTag(todo)"
+							@blur="cancelAddTag(todo)"
+							@keyup.esc="cancelAddTag(todo)"
+							v-todo-focus="todo.showTagInput"
+							placeholder="Tag name"
+						/>
+						<button v-else class="add-tag-btn" @click="showTagInput(todo)">
+							+ add tag
+						</button>
+					</div>
 				</li>
 			</ul>
 		</section>
@@ -105,6 +190,12 @@
 				})
 				.then(res => {				
 					this.todos = res == null ? [] : res;
+					// Initialize tags and UI state for existing todos
+					this.todos.forEach(todo => {
+						if (!todo.tags) todo.tags = [];
+						todo.showTagInput = false;
+						todo.newTag = '';
+					});
 				})
 			},
 
@@ -141,13 +232,17 @@
 					if (!value) {
 						return;
 					}
-					fetch(API + "/", {headers: HEADERS, method: "POST", body: JSON.stringify({title: value})})
+					fetch(API + "/", {headers: HEADERS, method: "POST", body: JSON.stringify({title: value, tags: []})})
 					.then(res => {					
 						if (res.ok) {												
 							this.newTodo = ''
 							return res.json();
 						}
-					}).then(res => {						
+					}).then(res => {
+						// Initialize tag UI state for new todo
+						if (!res.tags) res.tags = [];
+						res.showTagInput = false;
+						res.newTag = '';
 						this.todos.push(res);
 					})
 				},
@@ -187,7 +282,7 @@
 					if (!todo.title) {
 						this.removeTodo(todo);
 					} else {						
-						fetch(API + `/${todo.id}`, {headers: HEADERS, method: "PUT", body: JSON.stringify({title: todo.title})});
+						fetch(API + `/${todo.id}`, {headers: HEADERS, method: "PUT", body: JSON.stringify({title: todo.title, tags: todo.tags})});
 					}
 				},
 
@@ -200,6 +295,37 @@
 					filters.completed(this.todos).forEach(t => {						
 						this.removeTodo(t);
 					});					
+				},
+
+				// Tag-related methods
+				showTagInput(todo) {
+					todo.showTagInput = true;
+					todo.newTag = '';
+				},
+
+				addTag(todo) {
+					const tag = todo.newTag && todo.newTag.trim();
+					if (tag && !todo.tags.includes(tag)) {
+						todo.tags.push(tag);
+						// Update tags on the server
+						fetch(API + `/${todo.id}`, {headers: HEADERS, method: "PATCH", body: JSON.stringify({tags: todo.tags})});
+					}
+					todo.showTagInput = false;
+					todo.newTag = '';
+				},
+
+				removeTag(todo, tag) {
+					const index = todo.tags.indexOf(tag);
+					if (index > -1) {
+						todo.tags.splice(index, 1);
+						// Update tags on the server
+						fetch(API + `/${todo.id}`, {headers: HEADERS, method: "PATCH", body: JSON.stringify({tags: todo.tags})});
+					}
+				},
+
+				cancelAddTag(todo) {
+					todo.showTagInput = false;
+					todo.newTag = '';
 				}
 			},
 

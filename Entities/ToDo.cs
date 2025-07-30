@@ -28,7 +28,7 @@ namespace Azure.SQLDB.Samples.DynamicSchema
         [JsonPropertyName("completed")]
         [Column("completed", TypeName = "tinyint")]
         public bool Completed { get; set; }
-        
+
         // [JsonPropertyName("order")]
         // [NotMapped]
         // public int Order { 
@@ -50,6 +50,14 @@ namespace Azure.SQLDB.Samples.DynamicSchema
         //     set => Extensions.CreatedOn = value;
         // }
 
+        // [JsonPropertyName("tags")]
+        // [NotMapped]
+        // public List<string> Tags
+        // {
+        //     get => Extensions.Tags;
+        //     set => Extensions.Tags = value ?? [];
+        // }
+
         [JsonPropertyName("url")]
         [NotMapped]
         public string Url { get; set; }            
@@ -68,5 +76,8 @@ namespace Azure.SQLDB.Samples.DynamicSchema
 
         // [JsonPropertyName("createdOn")]
         // public DateTime CreatedOn { get; set; }
+
+        // [JsonPropertyName("tags")]
+        // public List<string> Tags { get; set; } = [];
     }
 }

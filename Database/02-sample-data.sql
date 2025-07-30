@@ -36,7 +36,8 @@ declare @t2 nvarchar(max) = '{
 	"completed": 1,
 	"extension": {
 		"order": 2,
-		"createdOn": "2020-10-24 22:00:00"	
+		"createdOn": "2020-10-24 22:00:00",
+		"tags": ["one", "two"]
 	}
 }';
 
