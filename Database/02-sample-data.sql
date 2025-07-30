@@ -1,3 +1,9 @@
+-- Set database context
+if (serverproperty('Edition') != 'SQL Azure') begin
+    use [dynamic-schema-ef]
+end
+go
+
 delete from dbo.[todo_hybrid];
 go
 
@@ -50,40 +56,4 @@ from
 go
 
 select * from dbo.[todo_hybrid]
-go
-
-/*
-	GET
-*/
-exec web.get_todo_hybrid '{"id": 50}'
-go
-
-/*
-	POST
-*/
-declare @j nvarchar(max) = '{
-	"title": "hello again!",
-	"completed": 1,
-	"extension": {
-		"order": 2,
-		"createdOn": "2020-10-28 10:00:00"	
-	}
-}';
-
-exec web.post_todo_hybrid @j
-
-/*
-	PATCH
-*/
-declare @j nvarchar(max) = '{
-	"id": 52,
-	"todo":	{
-		"title": "hello again, with patches!",
-		"extension": {
-			"order": 42
-		}
-	}
-}';
-
-exec web.patch_todo_hybrid @j
 go

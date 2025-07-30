@@ -1,5 +1,6 @@
 using System;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Http;
 
 namespace Azure.SQLDB.Samples.DynamicSchema
@@ -22,29 +23,29 @@ namespace Azure.SQLDB.Samples.DynamicSchema
     
     public static class Utils
     {
-        public static void EnrichJsonResult(HttpRequest request, JToken result, string test)
+        public static void EnrichJsonResult(HttpRequest request, JsonNode result, string path)
         {
-            var baseUrl = request.Scheme + "://" + request.Host + $"/{test}";
+            var baseUrl = request.Scheme + "://" +  request.Host + "/" + path;
 
-            var InjectUrl = new Action<JObject>(i =>
+            var InjectUrl = new Action<JsonObject>(i =>
             {
                 if (i != null)
                 {
-                    var itemId = i["id"]?.Value<int>();
+                    var itemId = i["id"]?.GetValue<int?>();
                     if (itemId != null) i["url"] = baseUrl + $"/{itemId}";
                 }
             });
 
-            switch (result.Type)
+            switch (result)
             {
-                case JTokenType.Object:
-                    InjectUrl(result as JObject);
+                case JsonObject jsonObject:
+                    InjectUrl(jsonObject);
                     break;
 
-                case JTokenType.Array:
-                    foreach (var i in result)
+                case JsonArray jsonArray:
+                    foreach (var item in jsonArray)
                     {
-                        InjectUrl(i as JObject);
+                        InjectUrl(item as JsonObject);
                     }
                     break;
             }

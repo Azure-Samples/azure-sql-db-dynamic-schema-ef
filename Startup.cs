@@ -39,11 +39,7 @@ public class Startup(IConfiguration configuration)
             app.UseDeveloperExceptionPage();
         }
 
-        app.UseHttpsRedirection();
-
         app.UseRouting();
-
-        app.UseAuthorization();
 
         app.UseCors("AllowOrigin");
 

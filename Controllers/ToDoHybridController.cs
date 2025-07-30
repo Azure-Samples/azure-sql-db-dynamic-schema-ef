@@ -22,7 +22,7 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var todos = await _context.ToDo.Take(10).ToListAsync();
+        var todos = await _context.ToDo.ToListAsync();
         var todoList = todos.Select(t => {
             t.Url = GenerateTodoUrl(t.Id);
             return t;

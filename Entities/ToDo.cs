@@ -29,18 +29,25 @@ namespace Azure.SQLDB.Samples.DynamicSchema
         [Column("completed", TypeName = "tinyint")]
         public bool Completed { get; set; }
         
-        [JsonPropertyName("order")]
-        [NotMapped]
-        public int Order { 
-            get => Extensions.Order;
-            set => Extensions.Order = value;
-        }
+        // [JsonPropertyName("order")]
+        // [NotMapped]
+        // public int Order { 
+        //     get => Extensions.Order;
+        //     set => Extensions.Order = value;
+        // }
 
         // [JsonPropertyName("author")]
         // [NotMapped]
         // public string Author { 
         //     get => Extensions.Author;
         //     set => Extensions.Author = value;
+        // }
+
+        // [JsonPropertyName("createdOn")]
+        // [NotMapped]
+        // public DateTime CreatedOn { 
+        //     get => Extensions.CreatedOn;
+        //     set => Extensions.CreatedOn = value;
         // }
 
         [JsonPropertyName("url")]
@@ -51,11 +58,15 @@ namespace Azure.SQLDB.Samples.DynamicSchema
         public ToDoExtension Extensions { get; set; } = null!;        
     }
 
-    public class ToDoExtension {
-        [JsonPropertyName("order")]
-        public int Order { get; set; }   
+    public class ToDoExtension
+    {
+        // [JsonPropertyName("order")]
+        // public int Order { get; set; }
 
         // [JsonPropertyName("author")]
-        // public string Author { get; set;}     
+        // public string Author { get; set; }     
+
+        // [JsonPropertyName("createdOn")]
+        // public DateTime CreatedOn { get; set; }
     }
 }

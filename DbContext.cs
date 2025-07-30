@@ -11,11 +11,15 @@ public class ToDoContext(DbContextOptions<ToDoContext> options) : DbContext(opti
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ToDo>(
-            etb => {                                    
-                etb.OwnsOne(todo => todo.Extensions, builder => { builder.ToJson("extension"); });                                    
-            }
-        );
+        modelBuilder.HasSequence<int>("global_sequence");
+
+        modelBuilder.Entity<ToDo>(etb => {
+            etb.OwnsOne(todo => todo.Extensions, builder => { builder.ToJson("extension").HasColumnType("json"); });
+        });
+
+        modelBuilder.Entity<ToDo>()
+            .Property(todo => todo.Id)
+            .HasDefaultValueSql("next value for dbo.global_sequence");
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)       
