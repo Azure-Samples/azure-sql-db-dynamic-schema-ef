@@ -12,7 +12,7 @@ declare @t nvarchar(max) = '{
 	"completed": 0,
 	"extension": {
 		"order": 1,
-		"createdOn": "2020-10-25 10:00:00"	
+		"createdOn": "2025-08-06T22:06:51"
 	}
 }';
 
@@ -36,7 +36,6 @@ declare @t2 nvarchar(max) = '{
 	"completed": 1,
 	"extension": {
 		"order": 2,
-		"createdOn": "2020-10-24 22:00:00",
 		"tags": ["one", "two"]
 	}
 }';
@@ -58,3 +57,5 @@ go
 
 select * from dbo.[todo_hybrid]
 go
+
+

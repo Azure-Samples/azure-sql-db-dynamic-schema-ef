@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Azure.SQLDB.Samples.DynamicSchema;
 
@@ -55,12 +57,49 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
     {
         var existing = await _context.ToDo.FindAsync(id);
         if (existing == null) return NotFound();
+        
         existing.Title = newTodo.Title ?? existing.Title;
         existing.Completed = newTodo.Completed;
-        existing.Extensions = newTodo.Extensions ?? existing.Extensions;
+        
+        // Merge Extensions using JsonNode
+        if (newTodo.Extensions != null)
+        {
+            // Initialize Extensions if null
+            existing.Extensions ??= new ToDoExtension();
+            
+            // Create JsonNodes directly from objects (more efficient)
+            var existingJson = JsonSerializer.SerializeToNode(existing.Extensions);
+            var newJson = JsonSerializer.SerializeToNode(newTodo.Extensions);
+            
+            // Merge: copy non-null values from newJson to existingJson
+            foreach (var property in newJson.AsObject())
+            {
+                if (property.Value != null && !IsDefaultJsonValue(property.Value))
+                {
+                    existingJson[property.Key] = property.Value.DeepClone();
+                }
+            }
+            
+            // Deserialize back to ToDoExtension
+            existing.Extensions = existingJson.Deserialize<ToDoExtension>();
+        }
+        
         _context.SaveChanges();
         existing.Url = GenerateTodoUrl(existing.Id);        
         return new OkObjectResult(existing);
+    }
+    
+    private static bool IsDefaultJsonValue(JsonNode value)
+    {
+        return value switch
+        {
+            JsonValue jsonValue when jsonValue.TryGetValue<bool>(out var boolValue) => boolValue == false,
+            JsonValue jsonValue when jsonValue.TryGetValue<string>(out var str) => string.IsNullOrEmpty(str),
+            JsonValue jsonValue when jsonValue.TryGetValue<int>(out var num) => num == 0,
+            JsonValue jsonValue when jsonValue.TryGetValue<decimal>(out var dec) => dec == 0,
+            JsonArray arr => arr.Count == 0,
+            _ => false
+        };
     }
     
     [HttpDelete]     

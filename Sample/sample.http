@@ -10,24 +10,13 @@ Content-Type: application/json
     "title": "New ToDo",
     "completed": false,
     "order": 987,
-    "author": "Jane Doe"
+    "author": "Jane Doe",
+    "createdOn": "2025-08-25T10:00:00"
 }
 
 ###
 
-PATCH http://localhost:5000/todo/hybrid/2
-Content-Type: application/json
-
-{
-    "title": "Updated ToDo",
-    "completed": true,
-    "order": 52,
-    "author": "John Doe"
-}
-
-###
-
-PATCH http://localhost:5000/todo/hybrid/2
+PATCH http://localhost:5000/todo/hybrid/4
 Content-Type: application/json
 
 {
@@ -35,5 +24,14 @@ Content-Type: application/json
     "completed": true,
     "order": 52,
     "author": "John Doe",
-    "createdOn": "2023-10-01T12:00:00Z"
+    "tags": ["urgent", "work"]
+}
+
+###
+
+PATCH http://localhost:5000/todo/hybrid/4
+Content-Type: application/json
+
+{
+    "title": "Updated Again 🤩"        
 }
