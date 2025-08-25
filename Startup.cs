@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Azure.SQLDB.Samples.DynamicSchema.Filters;
 
 namespace Azure.SQLDB.Samples.DynamicSchema;
 
@@ -15,7 +16,11 @@ public class Startup(IConfiguration configuration)
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            // Add the filter that automatically generates URLs for ToDo objects
+            options.Filters.Add<ToDoUrlGeneratorFilter>();
+        });
 
         services.AddDbContext<ToDoContext>(options => {
             options.UseSqlServer(Environment.GetEnvironmentVariable("MSSQL"));

@@ -19,18 +19,11 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
     private readonly IConfiguration _config = config;
     private readonly ToDoContext _context = context;
 
-    private string GenerateTodoUrl(int id) => HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + $"/todo/hybrid/{id}";
-
     [HttpGet]
     public async Task<IActionResult> Get()
     {
         var todos = await _context.ToDo.ToListAsync();
-        var todoList = todos.Select(t =>
-        {
-            t.Url = GenerateTodoUrl(t.Id);
-            return t;
-        }).ToList();
-        return new OkObjectResult(todoList);
+        return new OkObjectResult(todos);
     }
 
     [HttpGet]
@@ -39,7 +32,6 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
     {
         var todo = await _context.ToDo.FindAsync(id);
         if (todo == null) return NotFound();
-        todo.Url = GenerateTodoUrl(id);
         return new OkObjectResult(todo);
     }
 
@@ -48,7 +40,6 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
     {
         await _context.ToDo.AddAsync(todo);
         await _context.SaveChangesAsync();
-        todo.Url = GenerateTodoUrl(todo.Id);
         return new OkObjectResult(todo);
     }
 
@@ -86,7 +77,6 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
         }
 
         _context.SaveChanges();
-        existing.Url = GenerateTodoUrl(existing.Id);
         return new OkObjectResult(existing);
     }
 
@@ -98,7 +88,6 @@ public class ToDoHybridController(IConfiguration config, ILogger<ToDoHybridContr
         if (todo == null) return NotFound();
         _context.ToDo.Remove(todo);
         _context.SaveChanges();
-        todo.Url = GenerateTodoUrl(id);
         return new OkObjectResult(todo);
     }
 
