@@ -43,9 +43,6 @@ public class Startup(IConfiguration configuration)
 
         app.UseCors("AllowOrigin");
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }

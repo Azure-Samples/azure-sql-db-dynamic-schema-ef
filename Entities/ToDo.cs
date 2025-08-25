@@ -36,27 +36,27 @@ namespace Azure.SQLDB.Samples.DynamicSchema
             set => Extensions.Order = value;
         }
 
-        [JsonPropertyName("author")]
-        [NotMapped]
-        public string Author { 
-            get => Extensions.Author;
-            set => Extensions.Author = value;
-        }
+        // [JsonPropertyName("author")]
+        // [NotMapped]
+        // public string Author { 
+        //     get => Extensions.Author;
+        //     set => Extensions.Author = value;
+        // }
 
-        [JsonPropertyName("createdOn")]
-        [NotMapped]
-        public DateTime? CreatedOn { 
-            get => Extensions.CreatedOn;
-            set => Extensions.CreatedOn = value;
-        }
+        // [JsonPropertyName("createdOn")]
+        // [NotMapped]
+        // public DateTime? CreatedOn { 
+        //     get => Extensions.CreatedOn;
+        //     set => Extensions.CreatedOn = value;
+        // }
 
-        [JsonPropertyName("tags")]
-        [NotMapped]
-        public List<string> Tags
-        {
-            get => Extensions.Tags;
-            set => Extensions.Tags = value ?? [];
-        }
+        // [JsonPropertyName("tags")]
+        // [NotMapped]
+        // public List<string> Tags
+        // {
+        //     get => Extensions.Tags;
+        //     set => Extensions.Tags = value ?? [];
+        // }
 
         [JsonPropertyName("url")]
         [NotMapped]
@@ -71,13 +71,13 @@ namespace Azure.SQLDB.Samples.DynamicSchema
         [JsonPropertyName("order")]
         public int Order { get; set; }
 
-        [JsonPropertyName("author")]
-        public string Author { get; set; }     
+        // [JsonPropertyName("author")]
+        // public string Author { get; set; }     
 
-        [JsonPropertyName("createdOn")]
-        public DateTime? CreatedOn { get; set; }
+        // [JsonPropertyName("createdOn")]
+        // public DateTime? CreatedOn { get; set; }
 
-        [JsonPropertyName("tags")]
-        public List<string> Tags { get; set; } = [];
+        // [JsonPropertyName("tags")]
+        // public List<string> Tags { get; set; } = [];
     }
 }
