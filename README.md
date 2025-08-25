@@ -62,6 +62,6 @@ dotnet watch
 
 then use the `Sample/sample.http` file to test out the API.
 
-Uncomment the `ToDoExtension` properties in the `Entities/ToDo.cs` file and the properties in the `Controllers/ToDoHybridController.cs` file to add more filed to your entity.
+Uncomment the `ToDoExtension` properties in the `Entities/ToDo.cs` file and the properties in the `Controllers/ToDoHybridController.cs` file to add more fields to your entity.
 
 The new properties will be automatically serialized and deserialized by EF Core without the need to change the database schema, and you can use them in your application without any additional code.
