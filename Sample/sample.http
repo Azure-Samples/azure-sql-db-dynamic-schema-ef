@@ -16,7 +16,7 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:5000/todo/hybrid/4
+PATCH http://localhost:5000/todo/hybrid/6
 Content-Type: application/json
 
 {
@@ -29,9 +29,13 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:5000/todo/hybrid/4
+PATCH http://localhost:5000/todo/hybrid/5
 Content-Type: application/json
 
 {
     "title": "Updated Again 🤩"        
 }
+
+### 
+
+DELETE http://localhost:5000/todo/hybrid/5
